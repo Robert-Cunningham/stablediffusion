@@ -161,9 +161,10 @@ def timestep_embedding(timesteps, dim, max_period=10000, repeat_only=False):
     :return: an [N x dim] Tensor of positional embeddings.
     """
     if not repeat_only:
+        a = torch.ones((1, 1), dtype=torch.bfloat16, device=torch.device('cuda'))
         half = dim // 2
         freqs = torch.exp(
-            -math.log(max_period) * torch.arange(start=0, end=half, dtype=torch.bfloat16, device=timesteps.device) / half
+            -math.log(max_period) * torch.arange(start=0, end=half, dtype=torch.bfloat16, device=torch.device('cuda')) / half
         )
         args = timesteps[:, None].float() * freqs[None]
         embedding = torch.cat([torch.cos(args), torch.sin(args)], dim=-1)
